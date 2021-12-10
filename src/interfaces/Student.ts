@@ -3,4 +3,5 @@ export default interface Student {
   class: string;
   classId?: number;
   token?: string;
+  id?: number;
 };

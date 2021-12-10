@@ -3,14 +3,14 @@ import ClassNotFound from '../errors/ClassNotFound';
 import ValidationError from '../errors/ValidationError';
 import Student from '../interfaces/Student';
 import * as validations from '../validations/validations';
-import * as userService from '../services/userService';
+import * as usersService from '../services/usersService';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const student: Student = req.body;
     await validations.validateStudent(student);
 
-    const token = await userService.createUser(student);
+    const token = await usersService.createUser(student);
     res.send({ token });
   } catch (error) {
     if (error instanceof ClassNotFound) return res.status(404).send(error.message);

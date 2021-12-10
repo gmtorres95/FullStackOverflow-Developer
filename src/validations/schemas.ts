@@ -12,3 +12,15 @@ export const studentSchema = joi.object({
     .max(4)
     .required()
 });
+
+export const questionSchema = joi.object({
+  question: joi
+    .string()
+    .min(3)
+    .max(20000)
+    .required(),
+  tags: joi
+    .string()
+    .min(0)
+    .max(255)
+});
