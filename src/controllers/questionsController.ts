@@ -8,10 +8,12 @@ export async function postQuestion(req: Request, res: Response, next: NextFuncti
   try {
     const { studentData } = res.locals;
     const questionData: Question = req.body;
+    await validations.validateQuestion(questionData);
 
     const id = await questionsService.postQuestion(questionData, studentData);
     res.send({ id });
   } catch (error) {
+    if (error instanceof ValidationError) return res.status(400).send(error.message);
     next(error);
   }
 }
