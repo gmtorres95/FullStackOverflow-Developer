@@ -25,8 +25,18 @@ export const questionSchema = joi.object({
     .max(255)
 });
 
-export const answerSchema = joi
-  .string()
-  .min(3)
-  .max(20000)
-  .required();
+export const answerSchema = joi.object({
+  answer: joi
+    .string()
+    .min(3)
+    .max(20000)
+    .required()
+});
+
+export const idSchema = joi.object({
+  id: joi
+    .number()
+    .integer()
+    .positive()
+    .required()
+});
