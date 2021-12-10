@@ -8,7 +8,7 @@ export const studentSchema = joi.object({
     .required(),
   class: joi
     .string()
-    .pattern(/^T[1-9]\d+$/)
+    .pattern(/^T[1-9]\d*$/)
     .max(4)
     .required()
 });
