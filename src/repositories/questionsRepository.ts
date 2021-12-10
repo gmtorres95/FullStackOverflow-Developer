@@ -62,7 +62,7 @@ export async function getQuestion(questionId: number): Promise<Question> {
       ON questions.student_id = students.id
     JOIN classes
       ON students.class_id = classes.id
-    JOIN answers
+    LEFT JOIN answers
       ON questions.id = answers.question_id
     WHERE questions.id = $1`,
     [questionId],
