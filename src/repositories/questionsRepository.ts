@@ -19,6 +19,10 @@ export async function postAnswer(answer: string, studentData: Student, questionI
     'INSERT INTO answers (answer, student_id, question_id) VALUES ($1, $2, $3)',
     [answer, studentId, questionId],
   );
+  await connection.query(
+    'UPDATE questions SET answer = TRUE WHERE id = $1',
+    [questionId],
+  );
 }
 
 export async function getQuestions(): Promise<Question[]> {
