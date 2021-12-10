@@ -1,6 +1,6 @@
-import Student from '../interfaces/Student';
 import Question from '../interfaces/Question';
 import QuestionNotFound from '../errors/QuestionNotFound';
+import Student from '../interfaces/Student';
 import * as questionsRepository from '../repositories/questionsRepository';
 
 export async function postQuestion(questionData: Question, studentData: Student) {
