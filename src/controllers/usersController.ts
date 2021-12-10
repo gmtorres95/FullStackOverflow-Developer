@@ -11,7 +11,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     await validations.validateStudent(student);
 
     const token = await usersService.createUser(student);
-    res.send({ token });
+    res.status(201).send({ token });
   } catch (error) {
     if (error instanceof ClassNotFound) return res.status(404).send(error.message);
     if (error instanceof ValidationError) return res.status(400).send(error.message);
