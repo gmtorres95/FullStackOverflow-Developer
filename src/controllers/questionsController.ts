@@ -30,6 +30,7 @@ export async function postAnswer(req: Request, res: Response, next: NextFunction
     res.sendStatus(201);
   } catch (error) {
     if (error instanceof ValidationError) return res.status(400).send(error.message);
+    if (error.code === '23505') return res.status(409).send('This question has already been answered');
     next(error);
   }
 }
