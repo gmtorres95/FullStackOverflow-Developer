@@ -25,6 +25,7 @@ export async function postAnswer(req: Request, res: Response, next: NextFunction
     const questionId = Number(req.params.id);
     const answer: string = req.body.answer;
     await validations.validateAnswer(answer);
+    await validations.validateId(questionId);
 
     await questionsService.postAnswer(answer, studentData, questionId);
     res.sendStatus(201);
@@ -40,6 +41,20 @@ export async function getQuestions(req: Request, res: Response, next: NextFuncti
     const questions = await questionsService.getQuestions();
     res.send(questions);
   } catch (error) {
+    if (error instanceof QuestionNotFound) return res.status(404).send(error.message);
+    next(error);
+  }
+}
+
+export async function getQuestion(req: Request, res: Response, next: NextFunction) {
+  try {
+    const questionId = Number(req.params.id);
+    await validations.validateId(questionId);
+
+    const question = await questionsService.getQuestion(questionId);
+    res.send(question);
+  } catch (error) {
+    if (error instanceof ValidationError) return res.status(400).send(error.message);
     if (error instanceof QuestionNotFound) return res.status(404).send(error.message);
     next(error);
   }

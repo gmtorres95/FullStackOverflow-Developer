@@ -16,3 +16,15 @@ export async function getQuestions() {
   if (!questions.length) throw new QuestionNotFound('No question to be answered');
   return questions;
 }
+
+export async function getQuestion(questionId: number) {
+  const question = await questionsRepository.getQuestion(questionId);
+  if (!question) throw new QuestionNotFound('This question does not exist');
+
+  if (!question.answered) {
+    delete question.answeredAt;
+    delete question.answeredBy;
+    delete question.answer;
+  }
+  return question;
+}

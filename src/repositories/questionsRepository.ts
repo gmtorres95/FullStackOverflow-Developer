@@ -42,3 +42,30 @@ export async function getQuestions(): Promise<Question[]> {
   );
   return result.rows;
 }
+
+export async function getQuestion(questionId: number): Promise<Question> {
+  const result = await connection.query(`
+    SELECT
+      questions.question,
+      students.name as student,
+      classes.class,
+      questions.tags,
+      questions.answered,
+      questions."submitAt",
+      answers."answeredAt",
+      (
+        SELECT name FROM students WHERE id = answers.student_id
+      ) as "answeredBy",
+      answers.answer
+    FROM questions
+    JOIN students
+      ON questions.student_id = students.id
+    JOIN classes
+      ON students.class_id = classes.id
+    LEFT JOIN answers
+      ON questions.id = answers.question_id
+    WHERE questions.id = $1`,
+    [questionId],
+  );
+  return result.rows[0];
+}

@@ -5,4 +5,7 @@ export default interface Question {
   class: string;
   submitAt: string;
   answered?: boolean;
+  answeredAt?: string;
+	answeredBy?: string;
+	answer?: string;
 };

@@ -14,6 +14,11 @@ export async function validateQuestion(question: NewQuestion) {
 }
 
 export async function validateAnswer(answer: string) {
-  const joiValidation = schemas.answerSchema.validate(answer);
+  const joiValidation = schemas.answerSchema.validate({ answer });
+  if (joiValidation.error) throw new ValidationError(joiValidation.error.details[0].message);
+}
+
+export async function validateId(id: number) {
+  const joiValidation = schemas.idSchema.validate({ id });
   if (joiValidation.error) throw new ValidationError(joiValidation.error.details[0].message);
 }
