@@ -8,5 +8,6 @@ router.use(validateToken);
 router.post('', questionsController.postQuestion);
 router.get('', questionsController.getQuestions);
 router.post('/:id', questionsController.postAnswer);
+router.get('/:id', questionsController.getQuestion);
 
 export default router;
