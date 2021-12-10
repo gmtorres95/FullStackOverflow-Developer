@@ -7,5 +7,6 @@ const router = new (Router as any)();
 router.use(validateToken);
 router.post('', questionsController.postQuestion);
 router.get('', questionsController.getQuestions);
+router.post('/:id', questionsController.postAnswer);
 
 export default router;

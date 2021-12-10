@@ -19,6 +19,20 @@ export async function postQuestion(req: Request, res: Response, next: NextFuncti
   }
 }
 
+export async function postAnswer(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { studentData } = res.locals;
+    const questionId = Number(req.params.id);
+    const answer: string = req.body.answer;
+
+    await questionsService.postAnswer(answer, studentData, questionId);
+    res.sendStatus(201);
+  } catch (error) {
+    if (error instanceof ValidationError) return res.status(400).send(error.message);
+    next(error);
+  }
+}
+
 export async function getQuestions(req: Request, res: Response, next: NextFunction) {
   try {
     const questions = await questionsService.getQuestions();

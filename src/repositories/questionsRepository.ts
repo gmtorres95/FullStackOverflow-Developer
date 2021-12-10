@@ -20,7 +20,7 @@ export async function postAnswer(answer: string, studentData: Student, questionI
     [answer, studentId, questionId],
   );
   await connection.query(
-    'UPDATE questions SET answer = TRUE WHERE id = $1',
+    'UPDATE questions SET answered = TRUE WHERE id = $1',
     [questionId],
   );
 }
