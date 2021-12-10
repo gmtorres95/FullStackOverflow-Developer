@@ -24,6 +24,7 @@ export async function postAnswer(req: Request, res: Response, next: NextFunction
     const { studentData } = res.locals;
     const questionId = Number(req.params.id);
     const answer: string = req.body.answer;
+    await validations.validateAnswer(answer);
 
     await questionsService.postAnswer(answer, studentData, questionId);
     res.sendStatus(201);

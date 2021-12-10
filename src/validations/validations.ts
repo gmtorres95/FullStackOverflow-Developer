@@ -12,3 +12,8 @@ export async function validateQuestion(question: NewQuestion) {
   const joiValidation = schemas.questionSchema.validate(question);
   if (joiValidation.error) throw new ValidationError(joiValidation.error.details[0].message);
 }
+
+export async function validateAnswer(answer: string) {
+  const joiValidation = schemas.answerSchema.validate(answer);
+  if (joiValidation.error) throw new ValidationError(joiValidation.error.details[0].message);
+}
