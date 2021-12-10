@@ -13,6 +13,18 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
   return result.rows[0].id;
 }
 
+export async function postAnswer(answer: string, studentData: Student, questionId: number) {
+  const { id: studentId } = studentData;
+  await connection.query(
+    'INSERT INTO answers (answer, student_id, question_id) VALUES ($1, $2, $3)',
+    [answer, studentId, questionId],
+  );
+  await connection.query(
+    'UPDATE questions SET answered = TRUE WHERE id = $1',
+    [questionId],
+  );
+}
+
 export async function getQuestions(): Promise<Question[]> {
   const result = await connection.query(`
     SELECT

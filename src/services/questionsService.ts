@@ -7,6 +7,10 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
   return await questionsRepository.postQuestion(questionData, studentData);
 }
 
+export async function postAnswer(answer: string, studentData: Student, questionId: number) {
+  await questionsRepository.postAnswer(answer, studentData, questionId);
+}
+
 export async function getQuestions() {
   const questions = await questionsRepository.getQuestions();
   if (!questions.length) throw new QuestionNotFound('No question to be answered');
