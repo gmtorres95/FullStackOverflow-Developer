@@ -1,9 +1,9 @@
-import Question from '../interfaces/Question';
+import NewQuestion from '../interfaces/NewQuestion';
 import QuestionNotFound from '../errors/QuestionNotFound';
 import Student from '../interfaces/Student';
 import * as questionsRepository from '../repositories/questionsRepository';
 
-export async function postQuestion(questionData: Question, studentData: Student) {
+export async function postQuestion(questionData: NewQuestion, studentData: Student) {
   return await questionsRepository.postQuestion(questionData, studentData);
 }
 
