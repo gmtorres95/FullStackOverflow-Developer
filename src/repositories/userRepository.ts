@@ -6,7 +6,7 @@ export async function getClassId(className: string): Promise<number> {
     'SELECT id FROM classes WHERE class = $1',
     [className],
   );
-  return result.rows[0].id;
+  return result.rows[0]?.id;
 }
 
 export async function createUser(student: Student) {
