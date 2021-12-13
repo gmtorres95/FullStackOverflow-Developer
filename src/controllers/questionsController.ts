@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import QuestionNotFound from "../errors/QuestionNotFound";
 import ValidationError from '../errors/ValidationError';
+import DuplicatedVote from "../errors/DuplicatedVote";
 import NewQuestion from "../interfaces/NewQuestion";
 import Answer from "../interfaces/Answer";
 import Student from "../interfaces/Student";
+import Vote from "../interfaces/Vote";
 import * as validations from '../validations/validations';
 import * as questionsService from '../services/questionsService';
 
@@ -68,15 +70,19 @@ export async function getQuestion(req: Request, res: Response, next: NextFunctio
 
 export async function vote(req: Request, res: Response, next: NextFunction) {
   try {
-    const isUpvote = req.url.split('/')[2] === 'up-vote';
-    const questionId = Number(req.params.id);
-    await validations.validateId(questionId);
+    const voteData: Vote = {
+      studentId: res.locals.studentData.id,
+      questionId: Number(req.params.id),
+      isUpvote: req.url.split('/')[2] === 'up-vote',
+    }
+    await validations.validateId(voteData.questionId);
     
-    await questionsService.vote(questionId, isUpvote);
-    res.sendStatus(200);
+    await questionsService.vote(voteData);
+    res.sendStatus(201);
   } catch (error) {
     if (error instanceof ValidationError) return res.status(400).send(error.message);
     if (error instanceof QuestionNotFound) return res.status(404).send(error.message);
+    if (error instanceof DuplicatedVote) return res.status(409).send(error.message);
     next(error);
   }
 }

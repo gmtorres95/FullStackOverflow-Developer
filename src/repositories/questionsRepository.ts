@@ -3,6 +3,7 @@ import Student from '../interfaces/Student';
 import Answer from '../interfaces/Answer';
 import NewQuestion from '../interfaces/NewQuestion';
 import Question from '../interfaces/Question';
+import Vote from '../interfaces/Vote';
 
 export async function getTagId(tag: string): Promise<number> {
   const result = await connection.query(
@@ -112,9 +113,31 @@ export async function getQuestion(questionId: number): Promise<Question> {
   return result.rows[0];
 }
 
-export async function vote(questionId: number, newScore: number) {
+export async function getVote(voteData: Vote): Promise<number> {
+  const {
+    questionId,
+    studentId,
+  } = voteData;
+  const result = await connection.query(
+    'SELECT * FROM votes WHERE (question_id = $1 AND student_id = $2)',
+    [questionId, studentId],
+  );
+  return result.rows[0]?.id;
+}
+
+export async function vote(voteData: Vote) {
+  const {
+    questionId,
+    studentId,
+    newScore,
+    isUpvote,
+  } = voteData;
   await connection.query(
     'UPDATE questions SET score = $1 WHERE id = $2',
     [newScore, questionId],
+  );
+  await connection.query(
+    'INSERT INTO votes (question_id, student_id, is_upvote) VALUES ($1, $2, $3)',
+    [questionId, studentId, isUpvote],
   );
 }
