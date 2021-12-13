@@ -99,7 +99,7 @@ export async function getQuestion(questionId: number): Promise<Question> {
   return result.rows[0];
 }
 
-export async function postVote(questionId: number, newScore: number) {
+export async function vote(questionId: number, newScore: number) {
   await connection.query(
     'UPDATE questions SET score = $1 WHERE id = $2',
     [newScore, questionId],
