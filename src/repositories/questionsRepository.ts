@@ -3,6 +3,14 @@ import Student from '../interfaces/Student';
 import NewQuestion from '../interfaces/NewQuestion';
 import Question from '../interfaces/Question';
 
+export async function getTagId(tag: string): Promise<number> {
+  const result = await connection.query(
+    'SELECT id FROM tags WHERE tag = $1',
+    [tag],
+  )
+  return result.rows[0]?.id;
+}
+
 export async function postQuestion(questionData: NewQuestion, studentData: Student): Promise<number> {
   const { question, tags } = questionData;
   const { id: studentId } = studentData;
