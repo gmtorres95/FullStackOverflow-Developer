@@ -59,3 +59,18 @@ export async function getQuestion(req: Request, res: Response, next: NextFunctio
     next(error);
   }
 }
+
+export async function vote(req: Request, res: Response, next: NextFunction) {
+  try {
+    const isUpvote = req.url.split('/')[2] === 'up-vote';
+    const questionId = Number(req.params.id);
+    await validations.validateId(questionId);
+    
+    await questionsService.vote(questionId, isUpvote);
+    res.sendStatus(200);
+  } catch (error) {
+    if (error instanceof ValidationError) return res.status(400).send(error.message);
+    if (error instanceof QuestionNotFound) return res.status(404).send(error.message);
+    next(error);
+  }
+}

@@ -45,5 +45,5 @@ export async function vote(questionId: number, isUpvote: boolean) {
   if (!question) throw new QuestionNotFound('This question does not exist');
 
   const newScore = isUpvote ? question.score + 1 : question.score - 1;
-  await questionsRepository.vote(question.id, newScore);
+  await questionsRepository.vote(questionId, newScore);
 }
