@@ -6,7 +6,9 @@ import * as questionsRepository from '../repositories/questionsRepository';
 export async function postQuestion(questionData: NewQuestion, studentData: Student) {
   const questionId = await questionsRepository.postQuestion(questionData, studentData);
 
-  const tags = questionData.tags?.split(', ');
+  let tags = questionData.tags?.split(', ');
+  tags = [...new Set(tags)];
+  
   tags.map(async (tag) => {
     let tagId = await questionsRepository.getTagId(tag);
     if (!tagId) tagId = await questionsRepository.postTag(tag);

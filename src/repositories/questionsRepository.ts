@@ -27,11 +27,11 @@ export async function postQuestionTag(tagId: number, questionId: number) {
 }
 
 export async function postQuestion(questionData: NewQuestion, studentData: Student): Promise<number> {
-  const { question, tags } = questionData;
+  const { question } = questionData;
   const { id: studentId } = studentData;
   const result = await connection.query(
-    'INSERT INTO questions (question, student_id, tags) VALUES ($1, $2, $3) RETURNING id',
-    [question, studentId, tags],
+    'INSERT INTO questions (question, student_id) VALUES ($1, $2) RETURNING id',
+    [question, studentId],
   );
   return result.rows[0].id;
 }
