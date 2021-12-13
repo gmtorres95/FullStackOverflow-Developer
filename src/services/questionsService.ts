@@ -4,7 +4,18 @@ import Student from '../interfaces/Student';
 import * as questionsRepository from '../repositories/questionsRepository';
 
 export async function postQuestion(questionData: NewQuestion, studentData: Student) {
-  return await questionsRepository.postQuestion(questionData, studentData);
+  const questionId = await questionsRepository.postQuestion(questionData, studentData);
+
+  let tags = questionData.tags?.split(', ');
+  tags = [...new Set(tags)];
+  
+  tags.map(async (tag) => {
+    let tagId = await questionsRepository.getTagId(tag);
+    if (!tagId) tagId = await questionsRepository.postTag(tag);
+    await questionsRepository.postQuestionTag(tagId, questionId);
+  });
+
+  return questionId;
 }
 
 export async function postAnswer(answer: string, studentData: Student, questionId: number) {

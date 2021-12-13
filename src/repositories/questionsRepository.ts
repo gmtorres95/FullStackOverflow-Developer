@@ -3,12 +3,35 @@ import Student from '../interfaces/Student';
 import NewQuestion from '../interfaces/NewQuestion';
 import Question from '../interfaces/Question';
 
+export async function getTagId(tag: string): Promise<number> {
+  const result = await connection.query(
+    'SELECT id FROM tags WHERE tag = $1',
+    [tag],
+  );
+  return result.rows[0]?.id;
+}
+
+export async function postTag(tag: string): Promise<number> {
+  const result = await connection.query(
+    'INSERT INTO tags (tag) VALUES ($1) RETURNING id',
+    [tag],
+  );
+  return result.rows[0].id;
+}
+
+export async function postQuestionTag(tagId: number, questionId: number) {
+  await connection.query(
+    'INSERT INTO questions_tags (tag_id, question_id) VALUES ($1, $2)',
+    [tagId, questionId],
+  );
+}
+
 export async function postQuestion(questionData: NewQuestion, studentData: Student): Promise<number> {
-  const { question, tags } = questionData;
+  const { question } = questionData;
   const { id: studentId } = studentData;
   const result = await connection.query(
-    'INSERT INTO questions (question, student_id, tags) VALUES ($1, $2, $3) RETURNING id',
-    [question, studentId, tags],
+    'INSERT INTO questions (question, student_id) VALUES ($1, $2) RETURNING id',
+    [question, studentId],
   );
   return result.rows[0].id;
 }
@@ -49,7 +72,13 @@ export async function getQuestion(questionId: number): Promise<Question> {
       questions.question,
       students.name as student,
       classes.class,
-      questions.tags,
+      (
+        SELECT string_agg(tags.tag, ', ' ORDER BY tags.tag) AS tags
+        FROM tags
+        JOIN questions_tags
+          ON tags.id = questions_tags.tag_id
+        WHERE questions_tags.question_id = questions.id
+      ),
       questions.answered,
       questions."submitAt",
       answers."answeredAt",
