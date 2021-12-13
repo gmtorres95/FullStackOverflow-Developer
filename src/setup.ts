@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 
-let path = '.env.test';
+let path = '.env.dev';
 if (process.env.NODE_ENV === 'production') path = '.env';
-if (process.env.NODE_ENV === 'dev') path = '.env.dev';
 
 dotenv.config({ path });
