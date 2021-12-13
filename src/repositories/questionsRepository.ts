@@ -7,8 +7,16 @@ export async function getTagId(tag: string): Promise<number> {
   const result = await connection.query(
     'SELECT id FROM tags WHERE tag = $1',
     [tag],
-  )
+  );
   return result.rows[0]?.id;
+}
+
+export async function postTag(tag: string): Promise<number> {
+  const result = await connection.query(
+    'INSERT INTO tags (tag) VALUES ($1) RETURNING id',
+    [tag],
+  );
+  return result.rows[0].id;
 }
 
 export async function postQuestion(questionData: NewQuestion, studentData: Student): Promise<number> {
