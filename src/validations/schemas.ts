@@ -10,7 +10,7 @@ export const studentSchema = joi.object({
     .string()
     .pattern(/^T[1-9]\d*$/)
     .max(4)
-    .required()
+    .required(),
 });
 
 export const questionSchema = joi.object({
@@ -22,7 +22,7 @@ export const questionSchema = joi.object({
   tags: joi
     .string()
     .min(0)
-    .max(255)
+    .max(255),
 });
 
 export const answerSchema = joi.object({
@@ -30,7 +30,7 @@ export const answerSchema = joi.object({
     .string()
     .min(3)
     .max(20000)
-    .required()
+    .required(),
 });
 
 export const idSchema = joi.object({
@@ -38,5 +38,5 @@ export const idSchema = joi.object({
     .number()
     .integer()
     .positive()
-    .required()
+    .required(),
 });

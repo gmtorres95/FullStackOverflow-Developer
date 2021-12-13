@@ -1,4 +1,4 @@
-export default interface NewStudent {
+interface NewStudent {
   id: number;
   name: string;
   class: string;
@@ -6,4 +6,6 @@ export default interface NewStudent {
   studentInitialPoints: number;
   studentNewPoints?: number;
   token: string;
-};
+}
+
+export default NewStudent;

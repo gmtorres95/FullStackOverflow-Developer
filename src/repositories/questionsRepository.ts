@@ -61,8 +61,8 @@ export async function postAnswer(answer: Answer) {
 }
 
 export async function getQuestions(): Promise<Question[]> {
-  const result = await connection.query(`
-    SELECT
+  const result = await connection.query(
+    `SELECT
       questions.id,
       questions.question,
       students.name as student,
@@ -74,14 +74,14 @@ export async function getQuestions(): Promise<Question[]> {
       ON questions.student_id = students.id
     JOIN classes
       ON students.class_id = classes.id
-    WHERE answered = FALSE`
+    WHERE answered = FALSE`,
   );
   return result.rows;
 }
 
 export async function getQuestion(questionId: number): Promise<Question> {
-  const result = await connection.query(`
-    SELECT
+  const result = await connection.query(
+    `SELECT
       questions.question,
       students.name as student,
       classes.class,

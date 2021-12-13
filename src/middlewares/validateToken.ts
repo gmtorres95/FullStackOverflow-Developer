@@ -8,8 +8,8 @@ export default async function validateToken(req: Request, res: Response, next: N
     const token = req.headers.authorization?.split('Bearer ')[1];
     if (!token || token.length !== 36) throw new InvalidToken('Missing token or invalid token');
 
-    const result = await connection.query(`
-      SELECT
+    const result = await connection.query(
+      `SELECT
         students.id,
         students.name,
         students.token,
