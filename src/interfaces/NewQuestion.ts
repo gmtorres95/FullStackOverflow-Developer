@@ -3,6 +3,7 @@ export default interface NewQuestion {
 	student: string;
 	class: string;
 	tags: string;
+	tagIds?: number[];
   classId?: number;
   studentId?: number;
 };

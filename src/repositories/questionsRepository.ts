@@ -19,6 +19,13 @@ export async function postTag(tag: string): Promise<number> {
   return result.rows[0].id;
 }
 
+export async function postQuestionTag(tagId: number, questionId: number) {
+  await connection.query(
+    'INSERT INTO questions_tags (tag_id, question_id) VALUES ($1, $2)',
+    [tagId, questionId],
+  );
+}
+
 export async function postQuestion(questionData: NewQuestion, studentData: Student): Promise<number> {
   const { question, tags } = questionData;
   const { id: studentId } = studentData;
