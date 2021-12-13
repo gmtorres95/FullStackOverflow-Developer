@@ -1,7 +1,9 @@
 import NewQuestion from '../interfaces/NewQuestion';
-import QuestionNotFound from '../errors/QuestionNotFound';
 import Student from '../interfaces/Student';
 import Answer from '../interfaces/Answer';
+import Vote from '../interfaces/Vote';
+import QuestionNotFound from '../errors/QuestionNotFound';
+import DuplicatedVote from '../errors/DuplicatedVote';
 import * as questionsRepository from '../repositories/questionsRepository';
 
 export async function postQuestion(questionData: NewQuestion, studentData: Student) {
@@ -44,10 +46,13 @@ export async function getQuestion(questionId: number) {
   return question;
 }
 
-export async function vote(questionId: number, isUpvote: boolean) {
-  const question = await questionsRepository.getQuestion(questionId);
+export async function vote(voteData: Vote) {
+  const question = await questionsRepository.getQuestion(voteData.questionId);
   if (!question) throw new QuestionNotFound('This question does not exist');
 
-  const newScore = isUpvote ? question.score + 1 : question.score - 1;
-  await questionsRepository.vote(questionId, newScore);
+  const previousVote = await questionsRepository.getVote(voteData);
+  if (previousVote) throw new DuplicatedVote('Cannot vote twice on the same question');
+
+  voteData.newScore = voteData.isUpvote ? question.score + 1 : question.score - 1;
+  await questionsRepository.vote(voteData);
 }
