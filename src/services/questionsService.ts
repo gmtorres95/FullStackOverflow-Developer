@@ -1,6 +1,7 @@
 import NewQuestion from '../interfaces/NewQuestion';
 import QuestionNotFound from '../errors/QuestionNotFound';
 import Student from '../interfaces/Student';
+import Answer from '../interfaces/Answer';
 import * as questionsRepository from '../repositories/questionsRepository';
 
 export async function postQuestion(questionData: NewQuestion, studentData: Student) {
@@ -18,8 +19,11 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
   return questionId;
 }
 
-export async function postAnswer(answer: string, studentData: Student, questionId: number) {
-  await questionsRepository.postAnswer(answer, studentData, questionId);
+export async function postAnswer(answer: Answer) {
+  const question = await questionsRepository.getQuestion(answer.questionId);
+  answer.studentNewPoints = answer.studentInitialPoints + question.score;
+  
+  await questionsRepository.postAnswer(answer);
 }
 
 export async function getQuestions() {
@@ -38,4 +42,12 @@ export async function getQuestion(questionId: number) {
     delete question.answer;
   }
   return question;
+}
+
+export async function vote(questionId: number, isUpvote: boolean) {
+  const question = await questionsRepository.getQuestion(questionId);
+  if (!question) throw new QuestionNotFound('This question does not exist');
+
+  const newScore = isUpvote ? question.score + 1 : question.score - 1;
+  await questionsRepository.vote(questionId, newScore);
 }

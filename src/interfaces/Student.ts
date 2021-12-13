@@ -1,7 +1,9 @@
-export default interface Student {
+export default interface NewStudent {
+  id: number;
   name: string;
   class: string;
-  classId?: number;
-  token?: string;
-  id?: number;
+  answers: number;
+  studentInitialPoints: number;
+  studentNewPoints?: number;
+  token: string;
 };

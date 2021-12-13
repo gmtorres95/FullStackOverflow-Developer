@@ -1,9 +1,9 @@
 import ValidationError from '../errors/ValidationError';
 import NewQuestion from '../interfaces/NewQuestion';
-import Student from '../interfaces/Student';
+import NewStudent from '../interfaces/NewStudent';
 import * as schemas from './schemas';
 
-export async function validateStudent(student: Student) {
+export async function validateStudent(student: NewStudent) {
   const joiValidation = schemas.studentSchema.validate(student);
   if (joiValidation.error) throw new ValidationError(joiValidation.error.details[0].message);
 }

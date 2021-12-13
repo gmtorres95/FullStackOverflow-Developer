@@ -13,6 +13,8 @@ export default async function validateToken(req: Request, res: Response, next: N
         students.id,
         students.name,
         students.token,
+        students.answers,
+        students.points,
         classes.class
       FROM students
       JOIN classes

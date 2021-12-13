@@ -1,5 +1,6 @@
 import connection from '../database';
 import Student from '../interfaces/Student';
+import Answer from '../interfaces/Answer';
 import NewQuestion from '../interfaces/NewQuestion';
 import Question from '../interfaces/Question';
 
@@ -36,15 +37,25 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
   return result.rows[0].id;
 }
 
-export async function postAnswer(answer: string, studentData: Student, questionId: number) {
-  const { id: studentId } = studentData;
+export async function postAnswer(answer: Answer) {
+  const {
+    studentId,
+    studentAnswers,
+    studentNewPoints,
+    questionId,
+    text,
+  } = answer;
   await connection.query(
     'INSERT INTO answers (answer, student_id, question_id) VALUES ($1, $2, $3)',
-    [answer, studentId, questionId],
+    [text, studentId, questionId],
   );
   await connection.query(
     'UPDATE questions SET answered = TRUE WHERE id = $1',
     [questionId],
+  );
+  await connection.query(
+    'UPDATE students SET answers = $1, points = $2 WHERE id = $3',
+    [studentAnswers + 1, studentNewPoints, studentId],
   );
 }
 
@@ -55,6 +66,7 @@ export async function getQuestions(): Promise<Question[]> {
       questions.question,
       students.name as student,
       classes.class,
+      questions.score,
       questions."submitAt"
     FROM questions
     JOIN students
@@ -73,12 +85,13 @@ export async function getQuestion(questionId: number): Promise<Question> {
       students.name as student,
       classes.class,
       (
-        SELECT string_agg(tags.tag, ', ' ORDER BY tags.tag) AS tags
+        SELECT string_agg(tags.tag, ', ' ORDER BY tags.tag)
         FROM tags
         JOIN questions_tags
           ON tags.id = questions_tags.tag_id
         WHERE questions_tags.question_id = questions.id
-      ),
+      ) AS tags,
+      questions.score,
       questions.answered,
       questions."submitAt",
       answers."answeredAt",
@@ -97,4 +110,11 @@ export async function getQuestion(questionId: number): Promise<Question> {
     [questionId],
   );
   return result.rows[0];
+}
+
+export async function vote(questionId: number, newScore: number) {
+  await connection.query(
+    'UPDATE questions SET score = $1 WHERE id = $2',
+    [newScore, questionId],
+  );
 }
