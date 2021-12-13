@@ -1,17 +1,17 @@
-import { Request, Response, NextFunction } from "express";
-import QuestionNotFound from "../errors/QuestionNotFound";
+import { Request, Response, NextFunction } from 'express';
+import QuestionNotFound from '../errors/QuestionNotFound';
 import ValidationError from '../errors/ValidationError';
-import DuplicatedVote from "../errors/DuplicatedVote";
-import NewQuestion from "../interfaces/NewQuestion";
-import Answer from "../interfaces/Answer";
-import Student from "../interfaces/Student";
-import Vote from "../interfaces/Vote";
+import DuplicatedVote from '../errors/DuplicatedVote';
+import NewQuestion from '../interfaces/NewQuestion';
+import Answer from '../interfaces/Answer';
+import Student from '../interfaces/Student';
+import Vote from '../interfaces/Vote';
 import * as validations from '../validations/validations';
 import * as questionsService from '../services/questionsService';
 
 export async function postQuestion(req: Request, res: Response, next: NextFunction) {
   try {
-    const studentData: Student = res.locals.studentData;
+    const { studentData } = res.locals;
     const questionData: NewQuestion = req.body;
     await validations.validateQuestion(questionData);
 
@@ -31,7 +31,7 @@ export async function postAnswer(req: Request, res: Response, next: NextFunction
       studentInitialPoints: res.locals.studentData.points,
       questionId: Number(req.params.id),
       text: req.body.answer,
-    }
+    };
     await validations.validateAnswer(answer.text);
     await validations.validateId(answer.questionId);
 
@@ -74,9 +74,9 @@ export async function vote(req: Request, res: Response, next: NextFunction) {
       studentId: res.locals.studentData.id,
       questionId: Number(req.params.id),
       isUpvote: req.url.split('/')[2] === 'up-vote',
-    }
+    };
     await validations.validateId(voteData.questionId);
-    
+
     await questionsService.vote(voteData);
     res.sendStatus(201);
   } catch (error) {

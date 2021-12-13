@@ -11,7 +11,7 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
 
   let tags = questionData.tags?.split(', ');
   tags = [...new Set(tags)];
-  
+
   tags.map(async (tag) => {
     let tagId = await questionsRepository.getTagId(tag);
     if (!tagId) tagId = await questionsRepository.postTag(tag);
@@ -24,7 +24,7 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
 export async function postAnswer(answer: Answer) {
   const question = await questionsRepository.getQuestion(answer.questionId);
   answer.studentNewPoints = answer.studentInitialPoints + question.score;
-  
+
   await questionsRepository.postAnswer(answer);
 }
 

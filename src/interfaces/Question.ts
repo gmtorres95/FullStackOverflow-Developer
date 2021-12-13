@@ -1,4 +1,4 @@
-export default interface Question {
+interface Question {
   id?: number;
   question: string;
   student: string;
@@ -8,6 +8,8 @@ export default interface Question {
   answered?: boolean;
   submitAt: string;
   answeredAt?: string;
-	answeredBy?: string;
-	answer?: string;
-};
+  answeredBy?: string;
+  answer?: string;
+}
+
+export default Question;

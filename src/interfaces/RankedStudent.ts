@@ -1,5 +1,7 @@
-export default interface RankedStudent {
+interface RankedStudent {
   name: string;
   answers: number;
   points: number;
-};
+}
+
+export default RankedStudent;
