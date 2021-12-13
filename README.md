@@ -1,7 +1,6 @@
 # FullStackOverflow-Developer
 
-Find the best answers to your code related question
-Link of the API: https://fsod.herokuapp.com
+Find the best answers to your code related question  
 
 ## Technologies
 
