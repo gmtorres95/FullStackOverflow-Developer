@@ -3,12 +3,13 @@ import QuestionNotFound from "../errors/QuestionNotFound";
 import ValidationError from '../errors/ValidationError';
 import NewQuestion from "../interfaces/NewQuestion";
 import Answer from "../interfaces/Answer";
+import Student from "../interfaces/Student";
 import * as validations from '../validations/validations';
 import * as questionsService from '../services/questionsService';
 
 export async function postQuestion(req: Request, res: Response, next: NextFunction) {
   try {
-    const { studentData } = res.locals;
+    const studentData: Student = res.locals.studentData;
     const questionData: NewQuestion = req.body;
     await validations.validateQuestion(questionData);
 
@@ -24,6 +25,7 @@ export async function postAnswer(req: Request, res: Response, next: NextFunction
   try {
     const answer: Answer = {
       studentId: res.locals.studentData.id,
+      studentAnswers: res.locals.studentData.answers,
       studentInitialPoints: res.locals.studentData.points,
       questionId: Number(req.params.id),
       text: req.body.answer,

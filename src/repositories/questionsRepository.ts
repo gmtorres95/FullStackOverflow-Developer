@@ -40,6 +40,7 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
 export async function postAnswer(answer: Answer) {
   const {
     studentId,
+    studentAnswers,
     studentNewPoints,
     questionId,
     text,
@@ -53,8 +54,8 @@ export async function postAnswer(answer: Answer) {
     [questionId],
   );
   await connection.query(
-    'UPDATE students SET points = $1 WHERE id = $2',
-    [studentNewPoints, studentId],
+    'UPDATE students SET answers = $1, points = $2 WHERE id = $3',
+    [studentAnswers + 1, studentNewPoints, studentId],
   );
 }
 

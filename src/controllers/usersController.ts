@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import ClassNotFound from '../errors/ClassNotFound';
 import ValidationError from '../errors/ValidationError';
-import Student from '../interfaces/Student';
+import NewStudent from '../interfaces/NewStudent';
 import * as validations from '../validations/validations';
 import * as usersService from '../services/usersService';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const student: Student = req.body;
+    const student: NewStudent = req.body;
     await validations.validateStudent(student);
 
     const token = await usersService.createUser(student);
