@@ -1,5 +1,6 @@
 import connection from '../database';
 import Student from '../interfaces/Student';
+import Answer from '../interfaces/Answer';
 import NewQuestion from '../interfaces/NewQuestion';
 import Question from '../interfaces/Question';
 
@@ -36,15 +37,24 @@ export async function postQuestion(questionData: NewQuestion, studentData: Stude
   return result.rows[0].id;
 }
 
-export async function postAnswer(answer: string, studentData: Student, questionId: number) {
-  const { id: studentId } = studentData;
+export async function postAnswer(answer: Answer) {
+  const {
+    studentId,
+    studentNewPoints,
+    questionId,
+    text,
+  } = answer;
   await connection.query(
     'INSERT INTO answers (answer, student_id, question_id) VALUES ($1, $2, $3)',
-    [answer, studentId, questionId],
+    [text, studentId, questionId],
   );
   await connection.query(
     'UPDATE questions SET answered = TRUE WHERE id = $1',
     [questionId],
+  );
+  await connection.query(
+    'UPDATE students SET points = $1 WHERE id = $2',
+    [studentNewPoints, studentId],
   );
 }
 
@@ -55,6 +65,7 @@ export async function getQuestions(): Promise<Question[]> {
       questions.question,
       students.name as student,
       classes.class,
+      questions.score,
       questions."submitAt"
     FROM questions
     JOIN students

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import QuestionNotFound from "../errors/QuestionNotFound";
 import ValidationError from '../errors/ValidationError';
 import NewQuestion from "../interfaces/NewQuestion";
+import Answer from "../interfaces/Answer";
 import * as validations from '../validations/validations';
 import * as questionsService from '../services/questionsService';
 
@@ -21,13 +22,16 @@ export async function postQuestion(req: Request, res: Response, next: NextFuncti
 
 export async function postAnswer(req: Request, res: Response, next: NextFunction) {
   try {
-    const { studentData } = res.locals;
-    const questionId = Number(req.params.id);
-    const answer: string = req.body.answer;
-    await validations.validateAnswer(answer);
-    await validations.validateId(questionId);
+    const answer: Answer = {
+      studentId: res.locals.studentData.id,
+      studentInitialPoints: res.locals.studentData.points,
+      questionId: Number(req.params.id),
+      text: req.body.answer,
+    }
+    await validations.validateAnswer(answer.text);
+    await validations.validateId(answer.questionId);
 
-    await questionsService.postAnswer(answer, studentData, questionId);
+    await questionsService.postAnswer(answer);
     res.sendStatus(201);
   } catch (error) {
     if (error instanceof ValidationError) return res.status(400).send(error.message);
