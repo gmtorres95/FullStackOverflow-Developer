@@ -73,12 +73,13 @@ export async function getQuestion(questionId: number): Promise<Question> {
       students.name as student,
       classes.class,
       (
-        SELECT string_agg(tags.tag, ', ' ORDER BY tags.tag) AS tags
+        SELECT string_agg(tags.tag, ', ' ORDER BY tags.tag)
         FROM tags
         JOIN questions_tags
           ON tags.id = questions_tags.tag_id
         WHERE questions_tags.question_id = questions.id
-      ),
+      ) AS tags,
+      questions.score,
       questions.answered,
       questions."submitAt",
       answers."answeredAt",
