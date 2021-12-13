@@ -9,7 +9,7 @@ router.post('', questionsController.postQuestion);
 router.get('', questionsController.getQuestions);
 router.post('/:id', questionsController.postAnswer);
 router.get('/:id', questionsController.getQuestion);
-router.post('/:id/up-vote', questionsController.vote);
-router.post('/:id/down-vote', questionsController.vote);
+router.put('/:id/up-vote', questionsController.vote);
+router.put('/:id/down-vote', questionsController.vote);
 
 export default router;
