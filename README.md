@@ -236,7 +236,7 @@ With this route you will get a list of the top 10 students ordered by points.
 
 ```bash
 # Clone this repository
-$ git clone https://https://github.com/gmtorres95/FullStackOverflow-Developer
+$ git clone https://github.com/gmtorres95/FullStackOverflow-Developer
 
 # Install the dependencies
 $ npm i
